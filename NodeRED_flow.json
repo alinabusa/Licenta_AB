@@ -1,0 +1,1371 @@
+[
+    {
+        "id": "62bf144de09580a6",
+        "type": "tab",
+        "label": "Flow 4",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "ea681c27c5301ffe",
+        "type": "function",
+        "z": "62bf144de09580a6",
+        "name": "rezervoare",
+        "func": "let data = msg.payload;\nlet outputs = [];\n\n// Inserare pentru rezervor_1\nif (data.distanta1 !== undefined && data.volum1 !== undefined) {\n    let msg1 = {};\n    msg1.topic = `INSERT INTO rezervoare (rezervor, distanta1, distanta2, volum1, volum2, timestamp)\n                  VALUES ('rezervor_1', ${data.distanta1}, NULL, ${data.volum1}, NULL, NOW())`;\n    outputs.push(msg1);\n}\n\n// Inserare pentru rezervor_2\nif (data.distanta2 !== undefined && data.volum2 !== undefined) {\n    let msg2 = {};\n    msg2.topic = `INSERT INTO rezervoare (rezervor, distanta1, distanta2, volum1, volum2, timestamp)\n                  VALUES ('rezervor_2', NULL, ${data.distanta2}, NULL, ${data.volum2}, NOW())`;\n    outputs.push(msg2);\n}\n\nreturn [outputs];\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 850,
+        "y": 840,
+        "wires": [
+            [
+                "1e047d6755390c4a"
+            ]
+        ]
+    },
+    {
+        "id": "d67c37cf2a7970d8",
+        "type": "mysql",
+        "z": "62bf144de09580a6",
+        "mydb": "7d51c46ea7787cff",
+        "name": "Pompe",
+        "x": 960,
+        "y": 640,
+        "wires": [
+            [
+                "aaf71ded347a861a"
+            ]
+        ]
+    },
+    {
+        "id": "1e047d6755390c4a",
+        "type": "mysql",
+        "z": "62bf144de09580a6",
+        "mydb": "8612ccec6801f5b3",
+        "name": "Rezervoare",
+        "x": 1110,
+        "y": 840,
+        "wires": [
+            [
+                "7c3ea5330cbada81"
+            ]
+        ]
+    },
+    {
+        "id": "64b4c18637269099",
+        "type": "mysql",
+        "z": "62bf144de09580a6",
+        "mydb": "355a94c29543b9fa",
+        "name": "Energie",
+        "x": 980,
+        "y": 1160,
+        "wires": [
+            [
+                "7692b764bce69d2b"
+            ]
+        ]
+    },
+    {
+        "id": "8eb5e5522728c52d",
+        "type": "ui_gauge",
+        "z": "62bf144de09580a6",
+        "name": "",
+        "group": "541423dd5612f656",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Rezervor1",
+        "label": "ml",
+        "format": "{{value}}",
+        "min": "0",
+        "max": "1200",
+        "colors": [
+            "#9dced2",
+            "#488f9d",
+            "#3f5ed9"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 1090,
+        "y": 780,
+        "wires": []
+    },
+    {
+        "id": "0b7047d51d657992",
+        "type": "ui_gauge",
+        "z": "62bf144de09580a6",
+        "name": "",
+        "group": "c2e38142c2e55095",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Rezervor2",
+        "label": "ml",
+        "format": "{{value}}",
+        "min": "0",
+        "max": "1200",
+        "colors": [
+            "#9dced2",
+            "#488f9d",
+            "#3f5ed9"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 1090,
+        "y": 900,
+        "wires": []
+    },
+    {
+        "id": "f9432c73416082f6",
+        "type": "ui_text",
+        "z": "62bf144de09580a6",
+        "group": "5eba7d088c70a164",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Tensiune baterie",
+        "format": "{{msg.payload}}V",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 960,
+        "y": 1100,
+        "wires": []
+    },
+    {
+        "id": "eea9644a7fcb4f27",
+        "type": "ui_text",
+        "z": "62bf144de09580a6",
+        "group": "5eba7d088c70a164",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Curent total",
+        "format": "{{msg.payload}}mA",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 970,
+        "y": 1220,
+        "wires": []
+    },
+    {
+        "id": "ef6d9d9a71158344",
+        "type": "mqtt in",
+        "z": "62bf144de09580a6",
+        "name": "",
+        "topic": "arduino/data",
+        "qos": "1",
+        "datatype": "utf8",
+        "broker": "42b11a7fe2cc465d",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 70,
+        "y": 680,
+        "wires": [
+            [
+                "14cf99ba91cce2c1",
+                "68904ffe7bd718f8"
+            ]
+        ]
+    },
+    {
+        "id": "0d16613b34fe3e89",
+        "type": "ui_text",
+        "z": "62bf144de09580a6",
+        "group": "5eba7d088c70a164",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Procent baterie",
+        "format": "{{msg.payload}}%",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 980,
+        "y": 1260,
+        "wires": []
+    },
+    {
+        "id": "15ee13c229ecf974",
+        "type": "ui_led",
+        "z": "62bf144de09580a6",
+        "order": 2,
+        "group": "1469128883f07c9e",
+        "width": 0,
+        "height": 0,
+        "label": "Status",
+        "labelPlacement": "left",
+        "labelAlignment": "left",
+        "colorForValue": [
+            {
+                "color": "#008000",
+                "value": "verde",
+                "valueType": "str"
+            },
+            {
+                "color": "#ff0000",
+                "value": "rosu",
+                "valueType": "str"
+            },
+            {
+                "color": "#000000",
+                "value": "negru",
+                "valueType": "str"
+            }
+        ],
+        "allowColorForValueInMessage": true,
+        "shape": "circle",
+        "showGlow": true,
+        "name": "",
+        "x": 1310,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "4c6b87cb3d5f4eab",
+        "type": "ui_led",
+        "z": "62bf144de09580a6",
+        "order": 3,
+        "group": "1af9734470053068",
+        "width": 0,
+        "height": 0,
+        "label": "Status",
+        "labelPlacement": "left",
+        "labelAlignment": "left",
+        "colorForValue": [
+            {
+                "color": "#008000",
+                "value": "verde",
+                "valueType": "str"
+            },
+            {
+                "color": "#ff0000",
+                "value": "rosu",
+                "valueType": "str"
+            },
+            {
+                "color": "#000000",
+                "value": "negru",
+                "valueType": "str"
+            }
+        ],
+        "allowColorForValueInMessage": true,
+        "shape": "circle",
+        "showGlow": true,
+        "name": "",
+        "x": 1230,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "601405ac305d5028",
+        "type": "function",
+        "z": "62bf144de09580a6",
+        "name": "mod manual/automat",
+        "func": "//cod bun\n/*let data = msg.payload;\n\nlet mod = flow.get(\"mod\") || \"automat\";\nlet p1 = flow.get(\"pompa1\") === true ? 1 : 0;\nlet p2 = flow.get(\"pompa2\") === true ? 1 : 0;\n\ndata.mod = mod;\ndata.pompa1_stare = mod === \"manual\" ? p1 : -1;\ndata.pompa2_stare = mod === \"manual\" ? p2 : -1;\n\nmsg.payload = data;\nreturn msg;*/\n\n//de testat\nlet data = msg.payload;\nlet mod = flow.get(\"mod\") || \"automat\";\nlet p1 = flow.get(\"pompa1\") === true ? 1 : 0;\nlet p2 = flow.get(\"pompa2\") === true ? 1 : 0;\n\n// Setează stările pentru salvare în DB în orice mod\ndata.mod = mod;\ndata.pompa1_stare = p1;\ndata.pompa2_stare = p2;\n\nmsg.payload = data;\nreturn msg;\n\n\n\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 520,
+        "y": 640,
+        "wires": [
+            [
+                "c8de27f1ab082ba0"
+            ]
+        ]
+    },
+    {
+        "id": "9973de3ea62ae84f",
+        "type": "ui_switch",
+        "z": "62bf144de09580a6",
+        "name": "Pompa1",
+        "label": "Pompa principală",
+        "tooltip": "",
+        "group": "1469128883f07c9e",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "",
+        "topicType": "str",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "animate": false,
+        "className": "",
+        "x": 860,
+        "y": 220,
+        "wires": [
+            [
+                "fafd757ee72c73cc"
+            ]
+        ]
+    },
+    {
+        "id": "7116291ae63e1e05",
+        "type": "mqtt out",
+        "z": "62bf144de09580a6",
+        "name": "Pompa1",
+        "topic": "arduino/comanda",
+        "qos": "0",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "42b11a7fe2cc465d",
+        "x": 1300,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "4a9e5c42c6632d6b",
+        "type": "mqtt out",
+        "z": "62bf144de09580a6",
+        "name": "Pompa2",
+        "topic": "arduino/comanda",
+        "qos": "0",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "42b11a7fe2cc465d",
+        "x": 1300,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "869e916d477efe5c",
+        "type": "ui_switch",
+        "z": "62bf144de09580a6",
+        "name": "Pompa2 ",
+        "label": "Pompa rezervă",
+        "tooltip": "",
+        "group": "1af9734470053068",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "",
+        "topicType": "str",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "animate": false,
+        "className": "",
+        "x": 900,
+        "y": 340,
+        "wires": [
+            [
+                "b550fedc2d43a1da"
+            ]
+        ]
+    },
+    {
+        "id": "68a9000e9605b610",
+        "type": "function",
+        "z": "62bf144de09580a6",
+        "name": "Mod operare",
+        "func": "/*let mod = msg.payload;//cod bun\nflow.set(\"mod\", mod);  // Salvăm modul în context\n\nlet p1 = flow.get(\"pompa1\") === true ? 1 : 0;\nlet p2 = flow.get(\"pompa2\") === true ? 1 : 0;\n\nif (mod === \"manual\") {\n    return [\n        { payload: \"MOD:manual\", topic: \"arduino/comanda\" },\n        { payload: \"POMPA1:\" + p1, topic: \"arduino/comanda\" },\n        { payload: \"POMPA2:\" + p2, topic: \"arduino/comanda\" }\n    ];\n} else {\n    return [{ payload: \"MOD:\" + mod, topic: \"arduino/comanda\" }];\n}*/\nlet mod = msg.payload;\nflow.set(\"mod\", mod);\n\nif (mod === \"manual\") {\n    let p1 = flow.get(\"pompa1\") === true ? 1 : 0;\n    let p2 = flow.get(\"pompa2\") === true ? 1 : 0;\n\n    return [\n        [\n            { payload: \"MOD:manual\", topic: \"arduino/comanda\" },\n            { payload: \"POMPA1:\" + p1, topic: \"arduino/comanda\" },\n            { payload: \"POMPA2:\" + p2, topic: \"arduino/comanda\" }\n        ],\n        [{ payload: \"\" }],  // mesaj spre led1\n        [{ payload: \"\" }]   // mesaj spre led2\n    ];\n}\n\n// automat\nreturn [\n    [{ payload: \"MOD:automat\", topic: \"arduino/comanda\" }],\n    [{ payload: \"\" }],  // spre led1\n    [{ payload: \"\" }]   // spre led2\n];\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+        "outputs": 3,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 270,
+        "y": 380,
+        "wires": [
+            [
+                "c0415240c28de3aa",
+                "b23d1fb8920dae1f"
+            ],
+            [
+                "d6d0b3cff00f2fe0"
+            ],
+            [
+                "3d11fae8d4381ad5"
+            ]
+        ]
+    },
+    {
+        "id": "bcc8a028d4713d17",
+        "type": "ui_switch",
+        "z": "62bf144de09580a6",
+        "name": "",
+        "label": "Mod",
+        "tooltip": "",
+        "group": "5d0d48427dac1dac",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "decouple": "false",
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "onvalue": "manual",
+        "onvalueType": "str",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "automat",
+        "offvalueType": "str",
+        "officon": "",
+        "offcolor": "",
+        "animate": false,
+        "className": "",
+        "x": 70,
+        "y": 380,
+        "wires": [
+            [
+                "68a9000e9605b610"
+            ]
+        ]
+    },
+    {
+        "id": "da5ddd7215135689",
+        "type": "ui_text",
+        "z": "62bf144de09580a6",
+        "group": "5d0d48427dac1dac",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Mod actual",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 410,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "c0415240c28de3aa",
+        "type": "function",
+        "z": "62bf144de09580a6",
+        "name": "Afiseaza mod",
+        "func": "msg.payload = flow.get(\"mod\") || \"necunoscut\";\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 220,
+        "y": 200,
+        "wires": [
+            [
+                "da5ddd7215135689"
+            ]
+        ]
+    },
+    {
+        "id": "460e918e37bf612f",
+        "type": "mqtt out",
+        "z": "62bf144de09580a6",
+        "name": "Mod",
+        "topic": "arduino/comanda",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "42b11a7fe2cc465d",
+        "x": 630,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "82996d3bde835065",
+        "type": "function",
+        "z": "62bf144de09580a6",
+        "name": "date rezervoare",
+        "func": "\n// Preia payload-ul\nlet data = msg.payload;\n\n// ✅ Stocare distanțe\nif (data.distanta1 !== undefined) {\n    global.set(\"distanta1\", data.distanta1);\n}\n\nif (data.distanta2 !== undefined) {\n    global.set(\"distanta2\", data.distanta2);\n}\n\n// ✅ Stocare volume\nif (data.volum1 !== undefined) {\n    global.set(\"volum1\", data.volum1);\n}\n\nif (data.volum2 !== undefined) {\n    global.set(\"volum2\", data.volum2);\n}\nreturn msg;\n\n\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 620,
+        "y": 840,
+        "wires": [
+            [
+                "f5048178b43c8149",
+                "b01e2b0e4c83314d",
+                "3cf5d7012e903412",
+                "ef6f2bebdf940277",
+                "ea681c27c5301ffe"
+            ]
+        ]
+    },
+    {
+        "id": "2d9d4e8f16e5eade",
+        "type": "function",
+        "z": "62bf144de09580a6",
+        "name": "volum",
+        "func": "const inaltime = 15.0;\nconst golire = 23.0;\nconst maxVol = 1200.0;\n\nconst d1 = msg.payload.distanta1;\nconst d2 = msg.payload.distanta2;\n\nconst n1 = Math.max(0, Math.min(golire - d1, inaltime));\nconst n2 = Math.max(0, Math.min(golire - d2, inaltime));\n\nmsg.payload.volum1 = Math.round((n1 / inaltime) * maxVol);\nmsg.payload.volum2 = Math.round((n2 / inaltime) * maxVol);\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 450,
+        "y": 840,
+        "wires": [
+            [
+                "82996d3bde835065"
+            ]
+        ]
+    },
+    {
+        "id": "3f835e611a59c76c",
+        "type": "function",
+        "z": "62bf144de09580a6",
+        "name": "date alimentare",
+        "func": "\n// Preia payload-ul\nlet data = msg.payload;\n\nif (data.tensiune !== undefined) {\n    global.set(\"tensiune\", data.tensiune);\n}\nif (data.curent !== undefined) {\n    global.set(\"curent\", data.curent);\n}\n\nlet tensiune = data.tensiune;\nlet curent = data.curent;\n\nconst minV = 6;\nconst maxV = 8.4;\n\nlet procent = Math.min(100, Math.max(0, ((tensiune - minV) / (maxV - minV)) * 100));\nlet procentRotunjit = Math.round(procent);\n\nmsg.payload.procent_baterie = procentRotunjit;\nmsg.payload.procent_text = procentRotunjit + \" %\";\n\nconst prag_tensiune_led = 6.6;\nmsg.payload.led_on = tensiune < prag_tensiune_led ? 1 : 0;\n\nreturn {\n    payload: msg.payload,\n    topic: `INSERT INTO energie (tensiune_baterie, curent_total, procentaj, timestamp)\n            VALUES (${tensiune}, ${curent}, ${procent}, NOW())`\n};\n\n\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 1160,
+        "wires": [
+            [
+                "9681fec58f83d67d",
+                "028e1f219fba7038",
+                "c752bd7120603793",
+                "64b4c18637269099",
+                "8be3ddfc0b2e54bf",
+                "cd074a904f8b0271"
+            ]
+        ]
+    },
+    {
+        "id": "e08fd4a38607fd16",
+        "type": "ui_text",
+        "z": "62bf144de09580a6",
+        "group": "541423dd5612f656",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "name": "Distanta1",
+        "label": "Distanta1",
+        "format": "{{msg.payload}}cm",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 960,
+        "y": 740,
+        "wires": []
+    },
+    {
+        "id": "735fc6d12595f143",
+        "type": "ui_text",
+        "z": "62bf144de09580a6",
+        "group": "c2e38142c2e55095",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "name": "Distanta2",
+        "label": "Distanta2",
+        "format": "{{msg.payload}}cm",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 960,
+        "y": 940,
+        "wires": []
+    },
+    {
+        "id": "aaf71ded347a861a",
+        "type": "debug",
+        "z": "62bf144de09580a6",
+        "name": "debug 5",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1160,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "7c3ea5330cbada81",
+        "type": "debug",
+        "z": "62bf144de09580a6",
+        "name": "debug 10",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1300,
+        "y": 840,
+        "wires": []
+    },
+    {
+        "id": "7692b764bce69d2b",
+        "type": "debug",
+        "z": "62bf144de09580a6",
+        "name": "debug 11",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1200,
+        "y": 1160,
+        "wires": []
+    },
+    {
+        "id": "f5048178b43c8149",
+        "type": "function",
+        "z": "62bf144de09580a6",
+        "name": "volum1",
+        "func": "msg.payload = msg.payload.volum1;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 840,
+        "y": 800,
+        "wires": [
+            [
+                "8eb5e5522728c52d"
+            ]
+        ]
+    },
+    {
+        "id": "b01e2b0e4c83314d",
+        "type": "function",
+        "z": "62bf144de09580a6",
+        "name": "volum2",
+        "func": "msg.payload = msg.payload.volum2;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 840,
+        "y": 880,
+        "wires": [
+            [
+                "0b7047d51d657992"
+            ]
+        ]
+    },
+    {
+        "id": "9681fec58f83d67d",
+        "type": "function",
+        "z": "62bf144de09580a6",
+        "name": "tensiune",
+        "func": "msg.payload = msg.payload.tensiune;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 620,
+        "y": 1100,
+        "wires": [
+            [
+                "f9432c73416082f6"
+            ]
+        ]
+    },
+    {
+        "id": "028e1f219fba7038",
+        "type": "function",
+        "z": "62bf144de09580a6",
+        "name": "curent",
+        "func": "msg.payload = msg.payload.curent;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 610,
+        "y": 1220,
+        "wires": [
+            [
+                "eea9644a7fcb4f27"
+            ]
+        ]
+    },
+    {
+        "id": "c752bd7120603793",
+        "type": "function",
+        "z": "62bf144de09580a6",
+        "name": "procentaj",
+        "func": "msg.payload = msg.payload.procent_baterie;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 620,
+        "y": 1260,
+        "wires": [
+            [
+                "0d16613b34fe3e89"
+            ]
+        ]
+    },
+    {
+        "id": "3cf5d7012e903412",
+        "type": "function",
+        "z": "62bf144de09580a6",
+        "name": "dist1",
+        "func": "msg.payload = msg.payload.distanta1;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 790,
+        "y": 740,
+        "wires": [
+            [
+                "e08fd4a38607fd16"
+            ]
+        ]
+    },
+    {
+        "id": "ef6f2bebdf940277",
+        "type": "function",
+        "z": "62bf144de09580a6",
+        "name": "dist2",
+        "func": "msg.payload = msg.payload.distanta2;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 790,
+        "y": 940,
+        "wires": [
+            [
+                "735fc6d12595f143"
+            ]
+        ]
+    },
+    {
+        "id": "d6d0b3cff00f2fe0",
+        "type": "function",
+        "z": "62bf144de09580a6",
+        "name": "led1",
+        "func": "/*let mod = flow.get(\"mod\") || \"automat\";\nlet p1 = flow.get(\"pompa1\") === true;\n\nif (mod === \"manual\") {\n    msg.payload = p1 ? \"verde\" : \"rosu\";\n} else {\n    msg.payload = \"negru\";\n}\nreturn msg;*/\nlet mod = flow.get(\"mod\") || \"automat\";\nlet p1 = flow.get(\"pompa1\") === true;\n\nnode.warn(\"LED Update → Mod: \" + mod + \", Pompa1: \" + p1);\n\nif (mod === \"manual\") {\n    msg.payload = p1 ? \"verde\" : \"rosu\";\n} else {\n    msg.payload = \"negru\";\n}\nreturn msg;\n\n\n\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1110,
+        "y": 180,
+        "wires": [
+            [
+                "15ee13c229ecf974"
+            ]
+        ]
+    },
+    {
+        "id": "9514524d8e0b2b99",
+        "type": "ui_led",
+        "z": "62bf144de09580a6",
+        "order": 3,
+        "group": "7808999a8ed60b3a",
+        "width": "0",
+        "height": "0",
+        "label": "Nivel baterie critic",
+        "labelPlacement": "left",
+        "labelAlignment": "left",
+        "colorForValue": [
+            {
+                "color": "#ff0000",
+                "value": "true",
+                "valueType": "bool"
+            },
+            {
+                "color": "#00ff00",
+                "value": "false",
+                "valueType": "bool"
+            }
+        ],
+        "allowColorForValueInMessage": false,
+        "shape": "square",
+        "showGlow": false,
+        "name": "",
+        "x": 470,
+        "y": 1000,
+        "wires": []
+    },
+    {
+        "id": "8be3ddfc0b2e54bf",
+        "type": "function",
+        "z": "62bf144de09580a6",
+        "name": "alerta led",
+        "func": "msg.payload = msg.payload.led_on === 1;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 460,
+        "y": 1060,
+        "wires": [
+            [
+                "9514524d8e0b2b99"
+            ]
+        ]
+    },
+    {
+        "id": "c0ca51a6dcb2c98c",
+        "type": "debug",
+        "z": "62bf144de09580a6",
+        "name": "debug 14",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 440,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "f0e7498644ebbd49",
+        "type": "mqtt in",
+        "z": "62bf144de09580a6",
+        "name": "",
+        "topic": "rezervor2/distance",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "42b11a7fe2cc465d",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 170,
+        "y": 120,
+        "wires": [
+            [
+                "c0ca51a6dcb2c98c"
+            ]
+        ]
+    },
+    {
+        "id": "14cf99ba91cce2c1",
+        "type": "function",
+        "z": "62bf144de09580a6",
+        "name": "date convertite",
+        "func": "/*let parts = msg.payload.split(\",\");\n\nif (parts.length !== 4) return null;  // verifică să fie exact 4 elemente\n\nmsg.payload = {\n    distanta1: parseFloat(parts[0]),\n    distanta2: parseFloat(parts[1]),\n    tensiune: parseFloat(parts[2]),\n    curent: parseFloat(parts[3])\n};\n//cod bun\nreturn msg;*/\n\n/*let line = msg.payload.trim();\nlet parts = line.split(\",\");\n\n// verificăm dacă linia este completă și conține STARE\nif (parts.length !== 6 || !parts[4].startsWith(\"STARE:\")) return null;\n\nlet distanta1 = parseFloat(parts[0]);\nlet distanta2 = parseFloat(parts[1]);\nlet tensiune  = parseFloat(parts[2]);\nlet curent    = parseFloat(parts[3]);\n\n// extrage STARE:x,y\nlet stare1 = parseInt(parts[4].split(\":\")[1]);\nlet stare2 = parseInt(parts[5]);\n\n// salvăm starea în flow pentru nodul următor\nflow.set(\"pompa1\", stare1 === 1);\nflow.set(\"pompa2\", stare2 === 1);\n\n// trimitem datele fizice înainte\nmsg.payload = {\n    distanta1,\n    distanta2,\n    tensiune,\n    curent\n};\n// daca nu am stare\nreturn msg;*/\n\nif (typeof msg.payload === \"string\" && msg.payload.includes(\",\")) {\n    let parts = msg.payload.split(\",\");\n    if (parts.length === 4) {\n        msg.payload = {\n            distanta1: parseFloat(parts[0]),\n            distanta2: parseFloat(parts[1]),\n            tensiune: parseFloat(parts[2]),\n            curent: parseFloat(parts[3])\n        };\n        return msg; // doar acest mesaj merge mai departe spre dashboard\n    }\n}\n\n// orice alt mesaj (STARE, MOD etc.) iese pe a doua ieșire\nreturn [null, msg];\n\n\n\n\n\n\n",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 280,
+        "y": 680,
+        "wires": [
+            [
+                "2d9d4e8f16e5eade",
+                "3f835e611a59c76c",
+                "601405ac305d5028"
+            ],
+            [
+                "2ba3cb607b49c5c5"
+            ]
+        ]
+    },
+    {
+        "id": "8cfd1921965d8c80",
+        "type": "e-mail",
+        "z": "62bf144de09580a6",
+        "server": "smtp.gmail.com",
+        "port": "465",
+        "authtype": "BASIC",
+        "saslformat": true,
+        "token": "oauth2Response.access_token",
+        "secure": true,
+        "tls": true,
+        "name": "angelabusa2@gmail.com",
+        "dname": "Alerta ",
+        "x": 950,
+        "y": 1320,
+        "wires": []
+    },
+    {
+        "id": "c8de27f1ab082ba0",
+        "type": "function",
+        "z": "62bf144de09580a6",
+        "name": "date pompe",
+        "func": "//cod bun\nlet data = msg.payload;\n\n// Salvare în context global\nif (data.mod !== undefined) global.set(\"mod\", data.mod);\nif (data.pompa1_stare !== undefined) global.set(\"pompa1_stare\", data.pompa1_stare);\nif (data.pompa2_stare !== undefined) global.set(\"pompa2_stare\", data.pompa2_stare);\n\n// Pregătește comenzile SQL\nlet mod_funct = data.mod;\nlet stare1 = data.pompa1_stare;\nlet stare2 = data.pompa2_stare;\n\nlet comenzi = [];\n\ncomenzi.push({\n    topic: `INSERT INTO pompe (pompa, stare, mod_funct, timestamp)\n            VALUES ('principala', ${stare1}, '${mod_funct}', NOW())`\n});\ncomenzi.push({\n    topic: `INSERT INTO pompe (pompa, stare, mod_funct, timestamp)\n            VALUES ('rezerva', ${stare2}, '${mod_funct}', NOW())`\n});\n\nreturn [comenzi];\n\n/*\nlet data = msg.payload;\n\n// Salvare în context global\nif (data.mod !== undefined) global.set(\"mod\", data.mod);\nif (data.pompa1_stare !== undefined) global.set(\"pompa1_stare\", data.pompa1_stare);\nif (data.pompa2_stare !== undefined) global.set(\"pompa2_stare\", data.pompa2_stare);\n\n// Preluare valori (cu fallback)\nlet mod_funct = data.mod_funct || global.get(\"mod\");\nlet stare1 = data.pompa1_stare !== undefined ? data.pompa1_stare : global.get(\"pompa1_stare\");\nlet stare2 = data.pompa2_stare !== undefined ? data.pompa2_stare : global.get(\"pompa2_stare\");\n\n// Verificăm că toate sunt definite\nif (mod_funct === undefined || stare1 === undefined || stare2 === undefined) {\n    node.warn(\"Unele câmpuri lipsesc – nu salvăm în baza de date\");\n    return null;\n}\n\n// Construim comenzile\nlet comenzi = [];\n\ncomenzi.push({\n    topic: `INSERT INTO pompe (pompa, stare, mod_funct, timestamp)\n            VALUES ('principala', ${stare1}, '${mod_funct}', NOW())`\n});\ncomenzi.push({\n    topic: `INSERT INTO pompe (pompa, stare, mod_funct, timestamp)\n            VALUES ('rezerva', ${stare2}, '${mod_funct}', NOW())`\n});\n\nreturn [comenzi];*/\n\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 750,
+        "y": 640,
+        "wires": [
+            [
+                "9973de3ea62ae84f",
+                "869e916d477efe5c",
+                "d67c37cf2a7970d8"
+            ]
+        ]
+    },
+    {
+        "id": "b23d1fb8920dae1f",
+        "type": "split",
+        "z": "62bf144de09580a6",
+        "name": "",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "property": "payload",
+        "x": 510,
+        "y": 280,
+        "wires": [
+            [
+                "460e918e37bf612f",
+                "9973de3ea62ae84f",
+                "869e916d477efe5c"
+            ]
+        ]
+    },
+    {
+        "id": "3d11fae8d4381ad5",
+        "type": "function",
+        "z": "62bf144de09580a6",
+        "name": "led2",
+        "func": "/*let mod = flow.get(\"mod\") || \"automat\";\nlet p1 = flow.get(\"pompa2\") === true;\n\nif (mod === \"manual\") {\n    msg.payload = p1 ? \"verde\" : \"rosu\";\n} else {\n    msg.payload = \"negru\";\n}\nreturn msg;*/\nlet mod = flow.get(\"mod\") || \"automat\";\nlet p2 = flow.get(\"pompa2\") === true;\n\nnode.warn(\"LED2 Update → Mod: \" + mod + \", Pompa2: \" + p2);\n\nif (mod === \"manual\") {\n    msg.payload = p2 ? \"verde\" : \"rosu\";\n} else {\n    msg.payload = \"negru\";\n}\nreturn msg;\n\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1070,
+        "y": 420,
+        "wires": [
+            [
+                "4c6b87cb3d5f4eab"
+            ]
+        ]
+    },
+    {
+        "id": "2ba3cb607b49c5c5",
+        "type": "function",
+        "z": "62bf144de09580a6",
+        "name": "actualizare date pompe mod manual/automat",
+        "func": "/*let stare = msg.payload; //cod bun\nif (stare.startsWith(\"STARE:\")) {\n    let valori = stare.substring(6).split(\",\");\n    flow.set(\"pompa1\", valori[0] === \"1\");\n    flow.set(\"pompa2\", valori[1] === \"1\");\n}\nreturn null;*/\n\n/*let stare = msg.payload;\nif (stare.startsWith(\"STARE:\")) {\n    let valori = stare.substring(6).split(\",\");\n    let p1 = valori[0] === \"1\";\n    let p2 = valori[1] === \"1\";\n\n    flow.set(\"pompa1\", p1);\n    flow.set(\"pompa2\", p2);\n\n    let msg1 = { ...msg };\n    msg1.payload =\n        (p1 ? \"Pompa 1: activă\" : \"Pompa 1: oprită\") + \"\\n\" +\n        (p2 ? \"Pompa 2: activă\" : \"Pompa 2: oprită\");\n\n    let msg2 = {\n        payload: {\n            mod: flow.get(\"mod\") || \"automat\",\n            pompa1_stare: p1 ? 1 : 0,\n            pompa2_stare: p2 ? 1 : 0\n        }\n    };\n\n    return [msg1, msg2]; // msg1 la dashboard, msg2 la salvare\n}\nreturn [null, null];*/\n\n\n//cod bun de mai jos DA\n\nlet stare = msg.payload;\nif (stare.startsWith(\"STARE:\")) {\n    let valori = stare.substring(6).split(\",\");\n    let p1 = valori[0] === \"1\";\n    let p2 = valori[1] === \"1\";\n\n    flow.set(\"pompa1\", p1);\n    flow.set(\"pompa2\", p2);\n\n    // debug\n    node.warn(\"STARE PRIMITĂ: \" + stare);\n    node.warn(\"Interpretat: Pompa1=\" + p1 + \", Pompa2=\" + p2);\n\n    let text =\n        (p1 ? \"Pompa 1: activă\" : \"Pompa 1: oprită\") + \"\\n\" +\n        (p2 ? \"Pompa 2: activă\" : \"Pompa 2: oprită\");\n\n    node.warn(\"TEXT trimis la UI:\\n\" + text);\n\n    let msg1 = { payload: text };\n\n    let msg2 = {\n        payload: {\n            mod: flow.get(\"mod\") || \"automat\",\n            pompa1_stare: p1 ? 1 : 0,\n            pompa2_stare: p2 ? 1 : 0\n        }\n    };\n\n    return [msg1, msg2];\n}\nreturn [null, null];\n\n\n\n//merge daca nu conectez la stare\n/*let p1 = flow.get(\"pompa1\") === true;\nlet p2 = flow.get(\"pompa2\") === true;\n\nlet text =\n    (p1 ? \"Pompa 1: activă\" : \"Pompa 1: oprită\") + \"\\n\" +\n    (p2 ? \"Pompa 2: activă\" : \"Pompa 2: oprită\");\n\nlet msg1 = { payload: text };\n\nlet msg2 = {\n    payload: {\n        mod: flow.get(\"mod\") || \"automat\",\n        pompa1_stare: p1 ? 1 : 0,\n        pompa2_stare: p2 ? 1 : 0\n    }\n};\n\nreturn [msg1, msg2];*/\n\n\n\n\n\n",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 540,
+        "wires": [
+            [
+                "8e959552a6fabe47"
+            ],
+            [
+                "601405ac305d5028"
+            ]
+        ]
+    },
+    {
+        "id": "fafd757ee72c73cc",
+        "type": "function",
+        "z": "62bf144de09580a6",
+        "name": "control pompa1",
+        "func": "/*let stare = msg.payload === true ? \"POMPA1:1\" : \"POMPA1:0\";//cod bun\nflow.set(\"pompa1\", msg.payload === true);\nreturn { payload: stare, topic: \"arduino/comanda\" };*/\n/*\nlet mod = flow.get(\"mod\") || \"automat\";\nif (mod !== \"manual\") return null;\n\nlet stare = msg.payload === true ? \"POMPA1:1\" : \"POMPA1:0\";\nflow.set(\"pompa1\", msg.payload === true);\nreturn { payload: stare, topic: \"arduino/comanda\" };*/\nlet mod = flow.get(\"mod\") || \"automat\";\nif (mod !== \"manual\") return null;\n\nlet stare = msg.payload === true ? \"POMPA1:1\" : \"POMPA1:0\";\nflow.set(\"pompa1\", msg.payload === true);\n\nreturn {\n    payload: stare,  // fără a concatena din nou!\n    topic: \"arduino/comanda\"\n};\n\n\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1080,
+        "y": 260,
+        "wires": [
+            [
+                "7116291ae63e1e05",
+                "d6d0b3cff00f2fe0"
+            ]
+        ]
+    },
+    {
+        "id": "b550fedc2d43a1da",
+        "type": "function",
+        "z": "62bf144de09580a6",
+        "name": "control pompa2",
+        "func": "/*let stare = msg.payload === true ? \"POMPA2:1\" : \"POMPA2:0\";\nflow.set(\"pompa2\", msg.payload === true);\nreturn { payload: stare, topic: \"arduino/comanda\" };*/\n\n/*\nlet mod = flow.get(\"mod\") || \"automat\";\nif (mod !== \"manual\") return null;\n\nlet stare = msg.payload === true ? \"POMPA2:1\" : \"POMPA2:0\";\nflow.set(\"pompa2\", msg.payload === true);\nreturn { payload: stare, topic: \"arduino/comanda\" };*/\n\n\nlet mod = flow.get(\"mod\") || \"automat\";\nif (mod !== \"manual\") return null;\n\nlet stare = msg.payload === true ? \"POMPA2:1\" : \"POMPA2:0\";\nflow.set(\"pompa2\", msg.payload === true);\n\nreturn {\n    payload: stare,\n    topic: \"arduino/comanda\"\n};\n\n\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1080,
+        "y": 340,
+        "wires": [
+            [
+                "4a9e5c42c6632d6b",
+                "3d11fae8d4381ad5"
+            ]
+        ]
+    },
+    {
+        "id": "37f8e61223e889a6",
+        "type": "mqtt in",
+        "z": "62bf144de09580a6",
+        "name": "",
+        "topic": "arduino/stare",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "42b11a7fe2cc465d",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 110,
+        "y": 540,
+        "wires": [
+            [
+                "2ba3cb607b49c5c5"
+            ]
+        ]
+    },
+    {
+        "id": "cd074a904f8b0271",
+        "type": "function",
+        "z": "62bf144de09580a6",
+        "name": "ALERTĂ Tensiune",
+        "func": "let tensiune = msg.payload.tensiune;\n\nif (tensiune !== undefined && tensiune < 6.6) {\n    return {\n        topic: \"⚠️ ALERTĂ Tensiune Baterie\",\n        payload: `Tensiunea a scăzut sub pragul de siguranță: ${tensiune} V`\n    };\n}\n\nreturn null;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 630,
+        "y": 1320,
+        "wires": [
+            [
+                "8cfd1921965d8c80"
+            ]
+        ]
+    },
+    {
+        "id": "8e959552a6fabe47",
+        "type": "ui_text",
+        "z": "62bf144de09580a6",
+        "group": "b8bd317e04d5d289",
+        "order": 2,
+        "width": "0",
+        "height": "0",
+        "name": "",
+        "label": "Status automat",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 580,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "11365b04ffa19ba4",
+        "type": "inject",
+        "z": "62bf144de09580a6",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "STARE:0,1",
+        "payloadType": "str",
+        "x": 120,
+        "y": 480,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "68904ffe7bd718f8",
+        "type": "debug",
+        "z": "62bf144de09580a6",
+        "name": "debug 15",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 140,
+        "y": 860,
+        "wires": []
+    },
+    {
+        "id": "7d51c46ea7787cff",
+        "type": "MySQLdatabase",
+        "name": "Pompe",
+        "host": "127.0.0.1",
+        "port": "3306",
+        "db": "sistem_apa",
+        "tz": "",
+        "charset": "UTF8"
+    },
+    {
+        "id": "8612ccec6801f5b3",
+        "type": "MySQLdatabase",
+        "name": "Rezervoare",
+        "host": "127.0.0.1",
+        "port": "3306",
+        "db": "sistem_apa",
+        "tz": "",
+        "charset": "UTF8"
+    },
+    {
+        "id": "355a94c29543b9fa",
+        "type": "MySQLdatabase",
+        "name": "Energie",
+        "host": "127.0.0.1",
+        "port": "3306",
+        "db": "sistem_apa",
+        "tz": "",
+        "charset": "UTF8"
+    },
+    {
+        "id": "541423dd5612f656",
+        "type": "ui_group",
+        "name": "Rezervor1",
+        "tab": "d983b8f8d444177c",
+        "order": 5,
+        "disp": true,
+        "width": "12",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "c2e38142c2e55095",
+        "type": "ui_group",
+        "name": "Rezervor2",
+        "tab": "d983b8f8d444177c",
+        "order": 6,
+        "disp": true,
+        "width": "12",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "5eba7d088c70a164",
+        "type": "ui_group",
+        "name": "Baterie & Alimentare",
+        "tab": "d983b8f8d444177c",
+        "order": 1,
+        "disp": true,
+        "width": "21",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "42b11a7fe2cc465d",
+        "type": "mqtt-broker",
+        "name": "Telefon",
+        "broker": "192.168.43.179",
+        "port": "1884",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "1469128883f07c9e",
+        "type": "ui_group",
+        "name": "Pompa Principală",
+        "tab": "d983b8f8d444177c",
+        "order": 3,
+        "disp": true,
+        "width": "21",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "1af9734470053068",
+        "type": "ui_group",
+        "name": "Pompa Rezervă",
+        "tab": "d983b8f8d444177c",
+        "order": 4,
+        "disp": true,
+        "width": "21",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "5d0d48427dac1dac",
+        "type": "ui_group",
+        "name": "Mod sistem",
+        "tab": "d983b8f8d444177c",
+        "order": 2,
+        "disp": true,
+        "width": "21",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "7808999a8ed60b3a",
+        "type": "ui_group",
+        "name": "Alertă",
+        "tab": "d983b8f8d444177c",
+        "order": 8,
+        "disp": true,
+        "width": "7",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "b8bd317e04d5d289",
+        "type": "ui_group",
+        "name": "Activitate pompe (automat)",
+        "tab": "d983b8f8d444177c",
+        "order": 7,
+        "disp": true,
+        "width": 6,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "d983b8f8d444177c",
+        "type": "ui_tab",
+        "name": "Pump System",
+        "icon": "dashboard",
+        "order": 2,
+        "disabled": false,
+        "hidden": false
+    }
+]
